@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "sbercloud" {
-  enterprise_project_id = ${var.enterprise_project_id}
+  enterprise_project_id ={var.enterprise_project_id
   insecure = true,
   auth_url = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3" 
   region   = "ru-moscow-1"
