@@ -1,80 +1,70 @@
 variable "enterprise_project_id" {
   default     = "0"
-  description = "企业项目id，请参考部署指南到项目管理界面获取https://console.huaweicloud.com/eps/，0代表default项目。默认为0。"
+  description = "ID корпоративного проекта"
   type        = string
   nullable    = false
-
   validation {
-    condition     = can(regex("^[a-z0-9]{8}(-[a-z0-9]{4}){3}-[a-z0-9]{12}$|^0$", var.enterprise_project_id))
-    error_message = "Invalid input. Please re-enter."
+    condition     = length(regexall("^[a-z0-9]{8}(-[a-z0-9]{4}){3}-[a-z0-9]{12}$|^0$", var.enterprise_project_id)) > 0
+    error_message = "Некорректный формат ID проекта."
   }
 }
 
 variable "vpc_name" {
   default     = "gameflexmatch-hosting-platform-demo"
-  description = "虚拟私有云 VPC名称，该模板新建VPC，不允许重名。取值范围：1-54个字符，支持数字、字母、中文、_（下划线）、-（中划线）、.（点）。默认为gameflexmatch-hosting-platform-demo"
+  description = "Имя VPC"
   type        = string
   nullable    = false
 }
 
 variable "security_group_name" {
   default     = "gameflexmatch-hosting-platform-demo"
-  description = "安全组名称，该模板新建安全组，安全组规则请参考部署指南进行配置。取值范围：1-64个字符，支持数字、字母、中文、_（下划线）、-（中划线）、.（点）。默认为gameflexmatch-hosting-platform-demo"
+  description = "Имя группы безопасности"
   type        = string
   nullable    = false
 }
 
 variable "eip_bandwidth_size" {
   default     = 5
-  description = "弹性公网IP EIP带宽大小，单位：Mbit/s，计费方式为按带宽计费。取值范围：1-2,000。默认5。"
+  description = "Размер полосы пропускания EIP в Мбит/с"
   type        = number
   nullable    = false
-
   validation {
-    condition     = can(regex("^([1-9]|[1-9]\\d{1,2}|1\\d{3}|2000)$", tostring(var.eip_bandwidth_size)))
-    error_message = "Invalid input, please re-enter."
+    condition     = length(regexall("^([1-9]|[1-9]\\d{1,2}|1\\d{3}|2000)$", var.eip_bandwidth_size)) > 0
+    error_message = "Некорректное значение полосы пропускания."
   }
 }
 
 variable "obs_bucket_name" {
   default     = ""
-  description = "对象存储服务 OBS桶名称前缀，命名方式：{obs_bucket_name}-obs，用于存放应用数据，不允许重名。取值范围：1-59个字符，以字母或数字开头、结尾，仅支持小写字母、数字、中划线（-）、英文句号（.）。"
+  description = "Префикс имени бакета OBS"
   type        = string
   nullable    = false
-
   validation {
-    condition     = can(regex("^[a-z0-9][a-z0-9\\.-]{0,57}[a-z0-9]$", var.obs_bucket_name))
-    error_message = "Invalid input. Please re-enter."
+    condition     = length(regexall("^[a-z0-9][a-z0-9\\.-]{0,57}[a-z0-9]$", var.obs_bucket_name)) > 0
+    error_message = "Некорректное имя бакета."
   }
 }
 
 variable "ecs_name" {
   default     = "gameflexmatch-hosting-platform-demo"
-  description = "弹性云服务器 ECS名称前缀，不允许重名。命名规则{ecs_name}-appgateway0X、{ecs_name}-aass0X、{ecs_name}-fleetmanager0X及{ecs_name}-console，其中X取值[1,2]。取值范围：1-49个字符，支持数字、字母、_（下划线）、-（中划线）、.（点）。默认为gameflexmatch-hosting-platform-demo"
+  description = "Префикс имени ECS"
   type        = string
   nullable    = false
-
   validation {
-    condition     = can(regex("^[\\w-\\.]{1,49}$", var.ecs_name))
-    error_message = "Invalid input. Please re-enter."
+    condition     = length(regexall("^[\\w-\\.]{1,49}$", var.ecs_name)) > 0
+    error_message = "Некорректное имя ECS."
   }
 }
 
 variable "ecs_flavor" {
-  default     = "c7.large.2"
-  description = "ECS规格，请使用2vCPUs4GB及以上规格，请参考部署指南配置。默认c7.large.2（c7|2vCPUs|4GB）。"
+  default     = "s6.large.2"  # Изменено для SberCloud
+  description = "Тип инстанса ECS"
   type        = string
   nullable    = false
-
-  validation {
-    condition     = can(regex("^[a-z][a-z0-9]{0,3}\\.(x|[1-9][0-9]{0,1}x)large\\.[1-9][0-9]{0,1}$", var.ecs_flavor))
-    error_message = "Invalid input. Please re-enter."
-  }
 }
 
 variable "ecs_password" {
-  default     = ""
-  description = "ECS初始化密码及Console运维平台初始化密码，创建完成后，请参考部署指南登录ECS控制台修改密码。取值范围：长度为8-26位，密码至少必须包含大写字母、小写字母、数字和特殊字符（!@$%?*#.）中的三种，密码不能包含用户名或用户名的逆序。管理员帐户为root。"
+  description = "Пароль для ECS"
   type        = string
   nullable    = false
   sensitive   = true
@@ -94,14 +84,9 @@ variable "ecs_disk_size" {
 
 variable "rds_name" {
   default     = "gameflexmatch-hosting-platform-demo"
-  description = "云数据库RDS for MySQL名称，不支持重名。取值范围：4-64个字符，以字母开头，支持数字、字母、_（下划线）、-（中划线）。默认：gameflexmatch-hosting-platform-demo。"
+  description = "Имя RDS инстанса"
   type        = string
   nullable    = false
-
-  validation {
-    condition     = can(regex("^[a-zA-Z][\\w-]{3,63}$", var.rds_name))
-    error_message = "Invalid input. Please re-enter."
-  }
 }
 
 variable "rds_flavor" {
@@ -129,8 +114,7 @@ variable "rds_volume_size" {
 }
 
 variable "rds_password" {
-  default     = ""
-  description = "云数据库RDS for MySQL  root用户登录密码，默认为3个服务组件分别创建三个数据库appgateway/aass/fleetmanager及同名数据库登录用户，初始密码为该密码。取值范围：8-32个字符，必须至少包含大写字母、小写字母、数字和特殊字符（~!@#$%^*-_=+?,()&）中的三种。"
+  description = "Пароль для RDS"
   type        = string
   nullable    = false
   sensitive   = true
@@ -194,19 +178,13 @@ variable "redis_name" {
 
 variable "redis_capacity" {
   default     = 2
-  description = "分布式缓存服务 Redis版主备实例缓存内存规格，以GB为单位，具体规格详见：https://support.huaweicloud.com/productdesc-dcs/dcs-pd-0522002.html。默认2。"
+  description = "Размер Redis кластера в GB"
   type        = number
   nullable    = false
-
-  validation {
-    condition     = contains([0.125,0.25,0.5,1,2,4,8,16,24,32,48,64], var.redis_capacity)
-    error_message = "Invalid input, please re-enter."
-  }
 }
 
 variable "redis_password" {
-  default     = ""
-  description = "分布式缓存服务 Redis版实例初始化密码，取值范围：长度为8-32个字符，必须至少包含大写字母、小写字母、数字、特殊字符~!@#%^*-_=+?中的三种。"
+  description = "Пароль для Redis"
   type        = string
   nullable    = false
   sensitive   = true
@@ -233,29 +211,15 @@ variable "domain_id" {
 }
 
 variable "access_key" {
-  default     = ""
-  description = "账号访问密钥（AK），识别访问用户的身份。用于资源创建及上传镜像环境配置文件至OBS桶及GameFlexMatch的管理面服务组件的管理与执行，请参考部署指南获取。取值范围：20个字符，仅支持大写字母和数字。"
+  description = "Access Key для SberCloud"
   type        = string
-  nullable    = false
   sensitive   = true
-
-  validation {
-    condition     = can(regex("^[A-Z0-9]{20}$", var.access_key))
-    error_message = "Invalid input, please re-enter."
-  }
 }
 
 variable "secret_access_key" {
-  default     = ""
-  description = "账号秘密访问密钥（SK），对请求数据进行签名验证。用于资源创建上传镜像环境配置文件至OBS桶及GameFlexMatch的管理面服务组件的管理与执行，请参考部署指南获取。取值范围：40个字符，仅支持大小写字母和数字。"
+  description = "Secret Key для SberCloud"
   type        = string
-  nullable    = false
   sensitive   = true
-
-  validation {
-    condition     = can(regex("^[A-Za-z0-9]{40}$", var.secret_access_key))
-    error_message = "Invalid input, please re-enter."
-  }
 }
 
 variable "iam_agency_name" {
@@ -304,4 +268,16 @@ variable "charge_period" {
     condition     = can(regex("^[1-9]$", tostring(var.charge_period)))
     error_message = "Invalid input, please re-enter."
   }
+}
+
+variable "backend_script_url" {
+  description = "URL скрипта для установки и настройки бэкенда"
+  type        = string
+  default     = "https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-backend.sh"
+}
+
+variable "console_script_url" {
+  description = "URL скрипта для установки и настройки консоли"
+  type        = string
+  default     = "https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-console.sh"
 }

@@ -1,9 +1,0 @@
-provider_installation {
-   network_mirror {
-      url = "https://terraform.cloud.ru/"
-      include = ["registry.terraform.io/*/*"]
-   }
-   direct {
-      exclude = ["registry.terraform.io/*/*"]
-   }
-}
