@@ -90,13 +90,13 @@ variable "rds_name" {
 }
 
 variable "rds_flavor" {
-  default     = "rds.mysql.n1.large.2.ha"
-  description = "云数据库RDS规格，详细规格信息请参考https://support.huaweicloud.com/productdesc-rds/rds_01_0034.html。默认：rds.mysql.n1.large.2.ha（通用型主备实例2vCPU4GB）。"
+  default     = "rds.mysql.s1.large.ha"
+  description = "Тип инстанса RDS"
   type        = string
   nullable    = false
 
   validation {
-    condition     = can(regex("^(rds.mysql.)(n1.|x1.)(x|2x|4x|8x|16x||)large.((2|4|8).ha|(2|4|8))$", var.rds_flavor))
+    condition     = can(regex("^rds\\.mysql\\.(s1|n1|x1)\\.(large|xlarge|2xlarge|4xlarge|8xlarge|16xlarge)(\\.ha)?$", var.rds_flavor))
     error_message = "Invalid input. Please re-enter."
   }
 }
@@ -211,13 +211,13 @@ variable "domain_id" {
 }
 
 variable "access_key" {
-  description = "Access Key для SberCloud"
+  description = "Access key для аутентификации в SberCloud"
   type        = string
   sensitive   = true
 }
 
 variable "secret_access_key" {
-  description = "Secret Key для SberCloud"
+  description = "Secret key для аутентификации в SberCloud"
   type        = string
   sensitive   = true
 }
@@ -280,4 +280,33 @@ variable "console_script_url" {
   description = "URL скрипта для установки и настройки консоли"
   type        = string
   default     = "https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-console.sh"
+}
+
+variable "influxdb_script_url" {
+  description = "URL скрипта установки InfluxDB"
+  type        = string
+  default     = "https://raw.githubusercontent.com/gologole/terraform/main/scripts/init-influxdb.sh"
+}
+
+variable "availability_zone" {
+  description = "Зона доступности в регионе ru-moscow-1"
+  type        = string
+  default     = "ru-moscow-1a"
+}
+
+variable "project_name" {
+  description = "Имя проекта, используется как префикс для ресурсов"
+  type        = string
+  default     = "gameflexmatch"
+}
+
+variable "security_token" {
+  description = "Security Token (STS) для аутентификации в SberCloud"
+  type        = string
+  sensitive   = true
+}
+
+variable "account_name" {
+  description = "Имя аккаунта в SberCloud"
+  type        = string
 }
