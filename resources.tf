@@ -152,6 +152,20 @@ resource "sbercloud_compute_instance" "appgateway1" {
               sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
               sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
               systemctl restart sshd
+
+              # Установка необходимых пакетов
+              yum update -y
+              yum install -y wget curl
+
+              # Загрузка и выполнение скрипта установки бэкенда
+              wget -O /tmp/init-backend.sh ${var.backend_script_url}
+              chmod +x /tmp/init-backend.sh
+              /tmp/init-backend.sh
+
+             
+
+              # Логирование результатов установки
+              echo "Installation completed at $(date)" > /var/log/installation.log
               EOF
   )
 }
