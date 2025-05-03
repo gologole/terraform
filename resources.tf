@@ -208,4 +208,51 @@ resource "sbercloud_lb_member" "member_appgateway1" {
 resource "sbercloud_networking_eip_associate" "elb_appgateway_eip" {
   public_ip = sbercloud_vpc_eip.eip[8].address
   port_id   = sbercloud_lb_loadbalancer.elb_appgateway.vip_port_id
+}
+
+# Инстанс для консоли
+resource "sbercloud_compute_instance" "console" {
+  depends_on = [sbercloud_compute_instance.appgateway1]
+  
+  name              = "${var.ecs_name}-console"
+  flavor_id         = var.ecs_flavor
+  image_id          = data.sbercloud_images_image.centos.id
+  security_groups   = [sbercloud_networking_secgroup.secgroup.name]
+  availability_zone = local.az[0]
+  admin_pass        = var.ecs_password
+
+  network {
+    uuid = sbercloud_vpc_subnet.subnet.id
+  }
+
+  system_disk_type = "SSD"
+  system_disk_size = var.ecs_disk_size
+
+  user_data = base64encode(<<-EOF
+              #!/bin/bash
+              echo "${var.ecs_password}" | passwd --stdin root
+              sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+              sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+              systemctl restart sshd
+
+              # Установка необходимых пакетов
+              yum update -y
+              yum install -y wget curl
+
+              # Загрузка и выполнение скрипта установки консоли
+              wget -O /tmp/init-console.sh ${var.console_script_url}
+              chmod +x /tmp/init-console.sh
+              /tmp/init-console.sh ${sbercloud_compute_instance.appgateway1.access_ip_v4} ${var.ecs_password} ${sbercloud_lb_loadbalancer.elb_fleetmanager.vip_address} > /tmp/init-console.log 2>&1
+              rm -rf /tmp/init-console.sh
+
+              # Логирование результатов установки
+              echo "Console installation completed at $(date)" >> /var/log/installation.log
+              EOF
+  )
+}
+
+# Привязка EIP к консоли
+resource "sbercloud_networking_eip_associate" "console_eip" {
+  public_ip = sbercloud_vpc_eip.eip[6].address
+  port_id   = sbercloud_compute_instance.console.network[0].port
 } 
