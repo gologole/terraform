@@ -8,14 +8,9 @@ terraform {
 }
 
 provider "sbercloud" {
-  auth_url     = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3"
-  region       = "ru-moscow-1"
-  access_key   = var.access_key
-  secret_key   = var.secret_access_key
+  auth_url       = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3"
+  region         = "ru-moscow-1"
+  access_key     = var.access_key
+  secret_key     = var.secret_access_key
   security_token = var.security_token
-}
-
-# Используем зоны доступности из data.tf
-locals {
-  az = ["ru-moscow-1a", "ru-moscow-1b"]
 }
