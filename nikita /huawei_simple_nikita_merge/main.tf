@@ -13,4 +13,8 @@ provider "sbercloud" {
   access_key     = var.access_key
   secret_key     = var.secret_access_key
   security_token = var.security_token
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> denis
