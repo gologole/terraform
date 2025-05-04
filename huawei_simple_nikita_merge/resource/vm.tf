@@ -195,6 +195,7 @@ resource "sbercloud_evs_volume" "influxDB" {
   availability_zone = data.sbercloud_availability_zones.az.names[0]
 }
 
+############################################################## ИИЗМЕНИТЬ ЭТО
 # Создание виртуальной машины influxDB
 resource "sbercloud_compute_instance" "influxDB" {
   name              = "${var.influx_name}-influxDB"
