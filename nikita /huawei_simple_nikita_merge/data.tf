@@ -1,15 +1,15 @@
 # Данные зон доступности
-data "sbercloud_availability_zones" "az" {}  # :contentReference[oaicite:6]{index=6}
+data "sbercloud_availability_zones" "az" {} # :contentReference[oaicite:6]{index=6}
 
 # Данные образа CentOS
-data "sbercloud_images_image" "centos" {     # :contentReference[oaicite:7]{index=7}
+data "sbercloud_images_image" "centos" { # :contentReference[oaicite:7]{index=7}
   name        = "CentOS 7.9 64bit"
   visibility  = "public"
   most_recent = true
 }
 
 # Данные спецификаций DCS (Redis)
-data "sbercloud_dcs_flavors" "dcs_flavors" { # :contentReference[oaicite:8]{index=8}
+data "sbercloud_dds_flavors" "dcs_flavors" { # :contentReference[oaicite:8]{index=8}
   engine_version = "5.0"
   cache_mode     = "ha"
   capacity       = var.redis_capacity
@@ -33,5 +33,5 @@ locals {
   az = [
     data.sbercloud_availability_zones.az.names[0],
     data.sbercloud_availability_zones.az.names[1],
-  ]  # :contentReference[oaicite:10]{index=10}
+  ] # :contentReference[oaicite:10]{index=10}
 }
