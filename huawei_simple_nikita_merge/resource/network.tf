@@ -24,27 +24,6 @@ resource "sbercloud_vpc_address_group" "ipgroup" {
   ]
 }
 
-# Выделенные публичные IP для VPC
-resource "sbercloud_vpc_eip" "eip" {
-  count = 9
-  name  = "${var.vpc_name}-eip-${count.index + 1}"
-
-  publicip {
-    type = "5_bgp"
-  }
-
-  bandwidth {
-    name        = "${var.vpc_name}-bandwidth-${count.index + 1}"
-    share_type  = "PER"
-    size        = var.eip_bandwidth_size
-    charge_mode = "bandwidth"
-  }
-
-  charging_mode = var.charge_mode
-  period_unit   = var.charge_period_unit
-  period        = var.charge_period
-}
-
 # Группа серверов с политикой антиаффинности
 resource "sbercloud_compute_servergroup" "servergroup" {
   name     = "${var.ecs_name}-servergroup"

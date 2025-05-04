@@ -2,21 +2,20 @@ terraform {
   required_providers {
     sbercloud = {
       source  = "sbercloud-terraform/sbercloud"
-      version = "~> 1.12.9"
+      version = "1.10.1"
     }
   }
 }
 
 provider "sbercloud" {
-  # URL для IAM в вашем регионе
-  auth_url              = var.sbercloud_auth_url
-  # Регион SberCloud (например, ru-moscow-1)
-  region                = var.region
-  # Данные AK/SK для аутентификации
-  access_key            = var.access_key
-  secret_key            = var.secret_key
-  # Опциональный Enterprise Project ID
-  enterprise_project_id = var.enterprise_project_id
-  # Разрешить небезопасные TLS-соединения (если нужно)
-  insecure              = var.insecure
+  auth_url     = "https://iam.ru-moscow-1.hc.sbercloud.ru/v3"
+  region       = "ru-moscow-1"
+  access_key   = var.access_key
+  secret_key   = var.secret_access_key
+  security_token = var.security_token
+}
+
+# Используем зоны доступности из data.tf
+locals {
+  az = ["ru-moscow-1a", "ru-moscow-1b"]
 }
