@@ -115,7 +115,7 @@ variable "charge_mode" {
   nullable    = false
 
   validation {
-    condition     = contains(["postPaid","prePaid"], var.charge_mode)
+    condition     = contains(["postPaid", "prePaid"], var.charge_mode)
     error_message = "Invalid input. Please re-enter."
   }
 }
@@ -127,7 +127,7 @@ variable "charge_period_unit" {
   nullable    = false
 
   validation {
-    condition     = contains(["month","year"], var.charge_period_unit)
+    condition     = contains(["month", "year"], var.charge_period_unit)
     error_message = "Invalid input. Please re-enter."
   }
 }
@@ -159,7 +159,7 @@ variable "ecs_flavor" {
   default     = "c7.large.2"
   description = "Название flavor для ECS в SberCloud (минимум 2 vCPU и 4 GB). Список доступных можно посмотреть в настройках AS configuration or EVS volume resources провайдера. По умолчанию c7.large.2."
   validation {
-    condition = length(regexall("^[a-z][a-z0-9]{0,3}\\.(x[1-9]|[1-9][0-9]x?)large\\.[1-9][0-9]?$", var.ecs_flavor)) > 0
+    condition     = length(regexall("^[a-z][a-z0-9]{0,3}\\.(x[1-9]|[1-9][0-9]x?)large\\.[1-9][0-9]?$", var.ecs_flavor)) > 0
     error_message = "ecs_flavor должен соответствовать шаблону типа c{generation}.{size}.X (например, c7.large.2)."
   }
 }
@@ -172,14 +172,7 @@ variable "ecs_password" {
   validation {
     condition = (
       length(var.ecs_password) >= 8 &&
-      length(var.ecs_password) <= 26 &&
-      (
-        can(regex("[A-Z]", var.ecs_password)) +
-        can(regex("[a-z]", var.ecs_password)) +
-        can(regex("[0-9]", var.ecs_password)) +
-        can(regex("[!@\\$%\\?\\*#\\.]", var.ecs_password))
-      ) >= 3
-    )
+    length(var.ecs_password) <= 26)
     error_message = "ecs_password должен быть 8–26 символов и содержать не менее трёх типов символов: заглавные, строчные, цифры или спецсимволы (!@$%?*#.)."
   }
 }
@@ -213,7 +206,7 @@ variable "influx_flavor" {
   nullable    = false
 
   validation {
-    condition     = contains([
+    condition = contains([
       "geminidb.influxdb.large.4",
       "geminidb.influxdb.xlarge.4",
       "geminidb.influxdb.2xlarge.4",
@@ -245,14 +238,7 @@ variable "influx_password" {
   validation {
     condition = (
       length(var.influx_password) >= 8 &&
-      length(var.influx_password) <= 32 &&
-      (
-        can(regex("[A-Z]", var.influx_password)) +
-        can(regex("[a-z]", var.influx_password)) +
-        can(regex("[0-9]", var.influx_password)) +
-        can(regex("[~!@#$%^*\\-_=+?]", var.influx_password))
-      ) >= 3
-    )
+    length(var.influx_password) <= 32)
     error_message = "influx_password должен быть 8–32 символа и содержать не менее трёх типов: заглавные, строчные, цифры или спецсимволы."
   }
 }
@@ -358,7 +344,7 @@ variable "redis_capacity" {
   nullable    = false
 
   validation {
-    condition     = contains([0.125,0.25,0.5,1,2,4,8,16,24,32,48,64], var.redis_capacity)
+    condition     = contains([0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 24, 32, 48, 64], var.redis_capacity)
     error_message = "Invalid input. Please re-enter."
   }
 }
@@ -369,6 +355,13 @@ variable "redis_password" {
   description = "Пароль инициализации Redis; длина: 8–32 символа; минимум три типа из: заглавные, строчные, цифры, спецсимволы ~!@#%^*-_=+?."
   nullable    = false
   sensitive   = true
+}
+
+variable "security_token" {
+  type        = string
+  default     = ""
+  description = "Токен безопасности (STS), если используется"
+  nullable    = false
 }
 
 
@@ -412,14 +405,14 @@ locals {
 
 # Привязка EIP к VIP порту AppGateway
 resource "sbercloud_networking_eip_associate" "eip_associate_appgateway" {
-  port_id   = sbercloud_lb_loadbalancer.elb_appgateway.vip_port_id  # VIP порт AppGateway
-  public_ip = sbercloud_vpc_eip.eip[7].address                      # Адрес EIP
+  port_id   = sbercloud_lb_loadbalancer.elb_appgateway.vip_port_id # VIP порт AppGateway
+  public_ip = sbercloud_vpc_eip.eip[7].address                     # Адрес EIP
 }
 
 # Привязка EIP к VIP порту FleetManager
 resource "sbercloud_networking_eip_associate" "eip_associate_fleetmanager" {
-  port_id   = sbercloud_lb_loadbalancer.elb_fleetmanager.vip_port_id  # VIP порт FleetManager
-  public_ip = sbercloud_vpc_eip.eip[8].address                        # Адрес EIP
+  port_id   = sbercloud_lb_loadbalancer.elb_fleetmanager.vip_port_id # VIP порт FleetManager
+  public_ip = sbercloud_vpc_eip.eip[8].address                       # Адрес EIP
 }
 
 # Выделенные публичные IP для VPC
@@ -503,7 +496,7 @@ resource "sbercloud_lb_pool" "elb_pool_fleetmanager" {
 # Члены пулов (Member)
 resource "sbercloud_lb_member" "elb_member_appgateway01" {
   pool_id       = sbercloud_lb_pool.elb_pool_appgateway.id
-  address       = sbercloud_compute_instance.appgateway1.access_ip_v4
+  address       = sbercloud_compute_instance.appgateway01.access_ip_v4
   protocol_port = 60003
   subnet_id     = sbercloud_vpc_subnet.subnet.id
   weight        = 1
@@ -511,7 +504,7 @@ resource "sbercloud_lb_member" "elb_member_appgateway01" {
 
 resource "sbercloud_lb_member" "elb_member_appgateway02" {
   pool_id       = sbercloud_lb_pool.elb_pool_appgateway.id
-  address       = sbercloud_compute_instance.appgateway2.access_ip_v4
+  address       = sbercloud_compute_instance.appgateway02.access_ip_v4
   protocol_port = 60003
   subnet_id     = sbercloud_vpc_subnet.subnet.id
   weight        = 1
@@ -567,7 +560,7 @@ resource "sbercloud_identity_agency" "smn_agency" {
 }
 
 resource "sbercloud_identity_agency_role" "smn_agency_roles" {
-  agency_id = sbercloud_identity_agency.smn_agency.id
+  agency_id  = sbercloud_identity_agency.smn_agency.id
   project_id = var.project_id
   roles = [
     "SMN Administrator",
@@ -587,12 +580,12 @@ resource "sbercloud_evs_volume" "influxdb_system_disks" {
 
 # Создание виртуальных машин для узлов InfluxDB
 resource "sbercloud_compute_instance" "influxdb_nodes" {
-  count             = 3
-  name              = "${var.influxdb_cluster_name}-node${count.index + 1}"
-  flavor_id         = var.influxdb_flavor
-  image_id          = data.sbercloud_images_image.centos.id
-  availability_zone = data.sbercloud_availability_zones.az.names[count.index % length(data.sbercloud_availability_zones.az.names)]
-  admin_pass        = var.influxdb_password
+  count              = 3
+  name               = "${var.influxdb_cluster_name}-node${count.index + 1}"
+  flavor_id          = var.influxdb_flavor
+  image_id           = data.sbercloud_images_image.centos.id
+  availability_zone  = data.sbercloud_availability_zones.az.names[count.index % length(data.sbercloud_availability_zones.az.names)]
+  admin_pass         = var.influxdb_password
   security_group_ids = [sbercloud_networking_secgroup.secgroup.id]
 
   network {
@@ -701,16 +694,16 @@ resource "sbercloud_networking_secgroup_rule" "influxdb_cluster_rules" {
   count             = length(local.influxdb_ports)
   security_group_id = sbercloud_networking_secgroup.secgroup.id
   direction         = "ingress"
-  ethertype        = "IPv4"
-  protocol         = "tcp"
-  port_range_min   = local.influxdb_ports[count.index]
-  port_range_max   = local.influxdb_ports[count.index]
-  remote_group_id  = sbercloud_networking_secgroup.secgroup.id
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = local.influxdb_ports[count.index]
+  port_range_max    = local.influxdb_ports[count.index]
+  remote_group_id   = sbercloud_networking_secgroup.secgroup.id
 }
 
 locals {
   influxdb_ports = [8086, 8088] # 8086 для HTTP API, 8088 для кластерной коммуникации
-} 
+}
 
 # Создание VPC
 resource "sbercloud_vpc" "vpc" {
@@ -746,16 +739,16 @@ resource "sbercloud_compute_servergroup" "servergroup" {
 
 # Корзина OBS для хранения данных
 resource "sbercloud_obs_bucket" "bucket" {
-  bucket = "${var.obs_bucket_name}-obs"
-  acl    = "private"
+  bucket   = "${var.obs_bucket_name}-obs"
+  acl      = "private"
   multi_az = false
 }
 
 
 # RDS-инстанс (HA или одиночный)
 resource "sbercloud_rds_instance" "rds_instance" {
-  count             = length(regexall(".*\\.ha$", var.rds_flavor)) > 0 ? 1 : 0
-  name              = var.rds_name
+  count = length(regexall(".*\\.ha$", var.rds_flavor)) > 0 ? 1 : 0
+  name  = var.rds_name
   availability_zone = [
     data.sbercloud_availability_zones.az.names[0],
     data.sbercloud_availability_zones.az.names[1]
@@ -807,6 +800,37 @@ resource "sbercloud_rds_instance" "rds_single_instance" {
   volume {
     size = var.rds_volume_size
     type = "CLOUDSSD"
+  }
+}
+
+resource "sbercloud_rds_instance" "rds_ha_instance" {
+  count = length(regexall(".*\\.ha$", var.rds_flavor)) > 0 ? 1 : 0 # Если flavor заканчивается на .ha → HA-инстанс
+  name  = var.rds_name                                             # Имя инстанса
+  availability_zone = [                                            # Зоны доступности
+    data.huaweicloud_availability_zones.az.names[0],
+    data.huaweicloud_availability_zones.az.names[1]
+  ]
+  flavor            = var.rds_flavor                              # Спецификация
+  vpc_id            = huaweicloud_vpc_subnet.subnet.vpc_id        # ID VPC
+  subnet_id         = huaweicloud_vpc_subnet.subnet.id            # ID подсети
+  security_group_id = huaweicloud_networking_secgroup.secgroup.id # SG ID
+
+  backup_strategy {
+    keep_days  = 7             # Сохранять бэкапы 7 дней
+    start_time = "02:00-03:00" # Окно бэкапа
+  }
+
+  ha_replication_mode = "async" # Асинхронная репликация
+
+  db {
+    type     = "MySQL"          # Тип СУБД
+    version  = "5.7"            # Версия
+    password = var.rds_password # Пароль
+  }
+
+  volume {
+    size = var.rds_volume_size # Размер тома (ГБ)
+    type = "CLOUDSSD"          # Тип хранилища
   }
 }
 
@@ -905,7 +929,7 @@ resource "sbercloud_dcs_instance" "redis_instance" {
 
 # Группа безопасности
 resource "sbercloud_networking_secgroup" "secgroup" {
-  name = var.security_group_name  # Имя группы безопасности
+  name = var.security_group_name # Имя группы безопасности
 }
 
 # Правила группы безопасности
@@ -1030,20 +1054,20 @@ resource "sbercloud_networking_secgroup_rule" "allow_elb_accessing_ecs" {
 
 # Создание системного диска для Appgateway01
 resource "sbercloud_evs_volume" "appgateway01_sysdisk" {
-  name        = "${var.ecs_name}-appgateway01-sysdisk"
-  description = "Системный диск для Appgateway01"
-  size        = var.ecs_disk_size
-  volume_type = "SSD"  # Убедитесь, что тип диска поддерживается в вашем регионе
+  name              = "${var.ecs_name}-appgateway01-sysdisk"
+  description       = "Системный диск для Appgateway01"
+  size              = var.ecs_disk_size
+  volume_type       = "SSD" # Убедитесь, что тип диска поддерживается в вашем регионе
   availability_zone = data.sbercloud_availability_zones.az.names[0]
 }
 
 # Создание виртуальной машины Appgateway01
 resource "sbercloud_compute_instance" "appgateway01" {
-  name              = "${var.ecs_name}-appgateway01"
-  flavor_id         = var.ecs_flavor
-  image_id          = data.sbercloud_images_image.centos.id
-  availability_zone = data.sbercloud_availability_zones.az.names[0]
-  admin_pass        = var.ecs_password
+  name               = "${var.ecs_name}-appgateway01"
+  flavor_id          = var.ecs_flavor
+  image_id           = data.sbercloud_images_image.centos.id
+  availability_zone  = data.sbercloud_availability_zones.az.names[0]
+  admin_pass         = var.ecs_password
   security_group_ids = [sbercloud_networking_secgroup.secgroup.id]
   network {
     uuid = sbercloud_vpc_subnet.subnet.id
@@ -1110,9 +1134,9 @@ resource "sbercloud_compute_instance" "appgateway02" {
   network {
     uuid = sbercloud_vpc_subnet.subnet.id
   }
-  charging_mode     = var.charge_mode
-  period_unit       = var.charge_period_unit
-  period            = var.charge_period
+  charging_mode = var.charge_mode
+  period_unit   = var.charge_period_unit
+  period        = var.charge_period
 }
 
 resource "sbercloud_compute_volume_attachment" "appgateway02_attachment" {
@@ -1141,10 +1165,10 @@ resource "sbercloud_compute_instance" "aass" {
   network {
     uuid = sbercloud_vpc_subnet.subnet.id
   }
-  charging_mode     = var.charge_mode
-  period_unit       = var.charge_period_unit
-  period            = var.charge_period
-  user_data         = filebase64("${path.module}/user_data/aass0${count.index + 1}.sh")
+  charging_mode = var.charge_mode
+  period_unit   = var.charge_period_unit
+  period        = var.charge_period
+  user_data     = filebase64("${path.module}/user_data/aass0${count.index + 1}.sh")
 }
 
 resource "sbercloud_compute_volume_attachment" "aass_attachments" {
@@ -1174,10 +1198,10 @@ resource "sbercloud_compute_instance" "fleetmanager" {
   network {
     uuid = sbercloud_vpc_subnet.subnet.id
   }
-  charging_mode     = var.charge_mode
-  period_unit       = var.charge_period_unit
-  period            = var.charge_period
-  user_data         = filebase64("${path.module}/user_data/fleetmanager0${count.index + 1}.sh")
+  charging_mode = var.charge_mode
+  period_unit   = var.charge_period_unit
+  period        = var.charge_period
+  user_data     = filebase64("${path.module}/user_data/fleetmanager0${count.index + 1}.sh")
 }
 
 resource "sbercloud_compute_volume_attachment" "fleetmanager_attachments" {
@@ -1205,10 +1229,10 @@ resource "sbercloud_compute_instance" "console" {
   network {
     uuid = sbercloud_vpc_subnet.subnet.id
   }
-  charging_mode     = var.charge_mode
-  period_unit       = var.charge_period_unit
-  period            = var.charge_period
-  user_data         = filebase64("${path.module}/user_data/console.sh")
+  charging_mode = var.charge_mode
+  period_unit   = var.charge_period_unit
+  period        = var.charge_period
+  user_data     = filebase64("${path.module}/user_data/console.sh")
 }
 
 resource "sbercloud_compute_volume_attachment" "console_attachment" {
@@ -1217,12 +1241,11 @@ resource "sbercloud_compute_volume_attachment" "console_attachment" {
 }
 
 
-
 terraform {
   required_providers {
     sbercloud = {
       source  = "sbercloud-terraform/sbercloud"
-      version = "1.10.1"
+      version = ">= 1.12.8"
     }
   }
 }
