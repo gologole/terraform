@@ -204,6 +204,18 @@ resource "sbercloud_lb_member" "member_appgateway1" {
   subnet_id     = sbercloud_vpc_subnet.subnet.id
 }
 
+/*
+  resource "huaweicloud_lb_member" "elb_member_aass" {
+  count         = 2
+  pool_id       = huaweicloud_lb_pool.elb_pool_aass.id         # ID пула AASS
+  address       = huaweicloud_compute_instance.aass[count.index].access_ip_v4
+  protocol_port = 9091
+  subnet_id     = huaweicloud_vpc_subnet.subnet.id
+  weight        = 1
+}
+*/
+
+
 # Привязка EIP к Load Balancer
 resource "sbercloud_networking_eip_associate" "elb_appgateway_eip" {
   public_ip = sbercloud_vpc_eip.eip[8].address

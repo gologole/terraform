@@ -4,4 +4,4 @@ data "sbercloud_images_image" "centos" {
   most_recent = true
 }
 
-data "sbercloud_availability_zones" "zones" {} 
+data "sbercloud_availability_zones" "az" {} 
