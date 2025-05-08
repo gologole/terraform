@@ -3,7 +3,7 @@
         "required_providers": [
             {
                 "huaweicloud": {
-                    "source": "huawei.com/provider/huaweicloud",
+                    "source": "registry.terraform.io/huaweicloud/huaweicloud",
                     "version": "1.50.0"
                 }
             }
@@ -19,7 +19,10 @@
             "enterprise_project_id": "${var.enterprise_project_id}",
             "insecure": true,
             "region": "cn-north-4",
-            "auth_url": "https://iam.cn-north-4.myhuaweicloud.com/v3"
+            "auth_url": "https://iam.cn-north-4.myhuaweicloud.com/v3",
+            "access_key": "HPUAYQGEHVLDDG6D9REA",
+            "secret_key": "xfLSvu3LnaqiBDkD74aHdqbRwyMj7p1ZaSZf99lL",
+            "domain_id": "5f055189d7fd4d27829e754dbd29faa3"
         }
     },
     "variable": {

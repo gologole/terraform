@@ -1,0 +1,1010 @@
+[0m[1mdata.sbercloud_rds_flavors.rds_flavors: Reading...[0m[0m
+[0m[1mdata.sbercloud_images_image.centos: Reading...[0m[0m
+[0m[1mdata.sbercloud_availability_zones.az: Reading...[0m[0m
+[0m[1mdata.sbercloud_images_image.centos: Read complete after 0s [id=804761ab-346f-43cd-ac40-bee6f841be47][0m
+[0m[1mdata.sbercloud_availability_zones.az: Read complete after 0s [id=3471873928][0m
+[0m[1mdata.sbercloud_rds_flavors.rds_flavors: Read complete after 1s [id=3132922106][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+
+Terraform planned the following actions, but then encountered a problem:
+
+[1m  # null_resource.setup_mysql[0m will be created
+[0m  [32m+[0m[0m resource "null_resource" "setup_mysql" {
+      [32m+[0m[0m id = (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.appgateway1[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "appgateway1" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1a"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-appgateway01"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.appgateway2[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "appgateway2" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1b"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-appgateway02"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.fleetmanager[0][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "fleetmanager" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1a"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-fleetmanager1"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.fleetmanager[1][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "fleetmanager" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1b"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-fleetmanager2"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.influxdb_nodes[0][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "influxdb_nodes" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1a"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "your-cluster-name-node1"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m user_data             = "ed140c82c99b8426db0b7a645fe1b1d9fd6c93df"
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.influxdb_nodes[1][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "influxdb_nodes" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1b"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "your-cluster-name-node2"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m user_data             = "ed140c82c99b8426db0b7a645fe1b1d9fd6c93df"
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_instance.influxdb_nodes[2][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_instance" "influxdb_nodes" {
+      [32m+[0m[0m access_ip_v4          = (known after apply)
+      [32m+[0m[0m access_ip_v6          = (known after apply)
+      [32m+[0m[0m admin_pass            = (sensitive value)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1a"
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m flavor_id             = "s6.large.2"
+      [32m+[0m[0m flavor_name           = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m image_name            = (known after apply)
+      [32m+[0m[0m name                  = "your-cluster-name-node3"
+      [32m+[0m[0m power_action          = (known after apply)
+      [32m+[0m[0m public_ip             = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_ids    = (known after apply)
+      [32m+[0m[0m security_groups       = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m stop_before_destroy   = false
+      [32m+[0m[0m system_disk_id        = (known after apply)
+      [32m+[0m[0m system_disk_size      = (known after apply)
+      [32m+[0m[0m system_disk_type      = (known after apply)
+      [32m+[0m[0m user_data             = "ed140c82c99b8426db0b7a645fe1b1d9fd6c93df"
+      [32m+[0m[0m volume_attached       = (known after apply)
+
+      [32m+[0m[0m network {
+          [32m+[0m[0m access_network    = false
+          [32m+[0m[0m fixed_ip_v4       = (known after apply)
+          [32m+[0m[0m fixed_ip_v6       = (known after apply)
+          [32m+[0m[0m mac               = (known after apply)
+          [32m+[0m[0m port              = (known after apply)
+          [32m+[0m[0m source_dest_check = (known after apply)
+          [32m+[0m[0m uuid              = (known after apply)
+        }
+
+      [32m+[0m[0m scheduler_hints (known after apply)
+    }
+
+[1m  # sbercloud_compute_servergroup.servergroup[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_servergroup" "servergroup" {
+      [32m+[0m[0m fault_domains = (known after apply)
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m members       = (known after apply)
+      [32m+[0m[0m name          = "gameflexmatch-servergroup"
+      [32m+[0m[0m policies      = [
+          [32m+[0m[0m "anti-affinity",
+        ]
+      [32m+[0m[0m region        = (known after apply)
+    }
+
+[1m  # sbercloud_compute_volume_attach.appgateway01_sysdisk_attach[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_volume_attach" "appgateway01_sysdisk_attach" {
+      [32m+[0m[0m device      = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m instance_id = (known after apply)
+      [32m+[0m[0m pci_address = (known after apply)
+      [32m+[0m[0m region      = (known after apply)
+      [32m+[0m[0m volume_id   = (known after apply)
+    }
+
+[1m  # sbercloud_compute_volume_attach.appgateway02_sysdisk_attach[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_compute_volume_attach" "appgateway02_sysdisk_attach" {
+      [32m+[0m[0m device      = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m instance_id = (known after apply)
+      [32m+[0m[0m pci_address = (known after apply)
+      [32m+[0m[0m region      = (known after apply)
+      [32m+[0m[0m volume_id   = (known after apply)
+    }
+
+[1m  # sbercloud_dcs_instance.redis_instance[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_dcs_instance" "redis_instance" {
+      [32m+[0m[0m access_user             = (known after apply)
+      [32m+[0m[0m availability_zones      = [
+          [32m+[0m[0m "ru-moscow-1a",
+        ]
+      [32m+[0m[0m capacity                = 2
+      [32m+[0m[0m charging_mode           = "postPaid"
+      [32m+[0m[0m description             = (known after apply)
+      [32m+[0m[0m domain_name             = (known after apply)
+      [32m+[0m[0m engine                  = "Redis"
+      [32m+[0m[0m engine_version          = "5.0"
+      [32m+[0m[0m enterprise_project_id   = (known after apply)
+      [32m+[0m[0m enterprise_project_name = (known after apply)
+      [32m+[0m[0m flavor                  = "redis.ha.xu1.large.r2.2"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m internal_version        = (known after apply)
+      [32m+[0m[0m ip                      = (known after apply)
+      [32m+[0m[0m maintain_begin          = "02:00:00"
+      [32m+[0m[0m maintain_end            = "06:00:00"
+      [32m+[0m[0m max_memory              = (known after apply)
+      [32m+[0m[0m name                    = "gameflexmatch-hosting-platform-demo"
+      [32m+[0m[0m order_id                = (known after apply)
+      [32m+[0m[0m password                = (sensitive value)
+      [32m+[0m[0m period                  = 1
+      [32m+[0m[0m period_unit             = "month"
+      [32m+[0m[0m port                    = (known after apply)
+      [32m+[0m[0m private_ip              = (known after apply)
+      [32m+[0m[0m product_id              = (known after apply)
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m security_group_id       = (known after apply)
+      [32m+[0m[0m security_group_name     = (known after apply)
+      [32m+[0m[0m status                  = (known after apply)
+      [32m+[0m[0m subnet_id               = (known after apply)
+      [32m+[0m[0m subnet_name             = (known after apply)
+      [32m+[0m[0m used_memory             = (known after apply)
+      [32m+[0m[0m user_id                 = (known after apply)
+      [32m+[0m[0m user_name               = (known after apply)
+      [32m+[0m[0m vpc_id                  = (known after apply)
+      [32m+[0m[0m vpc_name                = (known after apply)
+      [32m+[0m[0m whitelist_enable        = false
+
+      [32m+[0m[0m backup_policy {
+          [32m+[0m[0m backup_at   = [
+              [32m+[0m[0m 1,
+              [32m+[0m[0m 3,
+              [32m+[0m[0m 5,
+              [32m+[0m[0m 7,
+            ]
+          [32m+[0m[0m backup_type = "auto"
+          [32m+[0m[0m begin_at    = "02:00-04:00"
+          [32m+[0m[0m period_type = "weekly"
+          [32m+[0m[0m save_days   = 3
+        }
+    }
+
+[1m  # sbercloud_evs_volume.aass_system_disks[0][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_evs_volume" "aass_system_disks" {
+      [32m+[0m[0m attachment            = (known after apply)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1a"
+      [32m+[0m[0m cascade               = false
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m device_type           = "VBD"
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m multiattach           = false
+      [32m+[0m[0m name                  = "gameflexmatch-aass01-system-disk"
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m size                  = 100
+      [32m+[0m[0m volume_type           = "GPSSD"
+      [32m+[0m[0m wwn                   = (known after apply)
+    }
+
+[1m  # sbercloud_evs_volume.aass_system_disks[1][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_evs_volume" "aass_system_disks" {
+      [32m+[0m[0m attachment            = (known after apply)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1b"
+      [32m+[0m[0m cascade               = false
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m device_type           = "VBD"
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m multiattach           = false
+      [32m+[0m[0m name                  = "gameflexmatch-aass02-system-disk"
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m size                  = 100
+      [32m+[0m[0m volume_type           = "GPSSD"
+      [32m+[0m[0m wwn                   = (known after apply)
+    }
+
+[1m  # sbercloud_evs_volume.appgateway01_sysdisk[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_evs_volume" "appgateway01_sysdisk" {
+      [32m+[0m[0m attachment            = (known after apply)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1a"
+      [32m+[0m[0m cascade               = false
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m description           = "Системный диск для Appgateway01"
+      [32m+[0m[0m device_type           = "VBD"
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m multiattach           = false
+      [32m+[0m[0m name                  = "gameflexmatch-appgateway01-sysdisk"
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m size                  = 100
+      [32m+[0m[0m volume_type           = "SSD"
+      [32m+[0m[0m wwn                   = (known after apply)
+    }
+
+[1m  # sbercloud_evs_volume.appgateway02_system_disk[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_evs_volume" "appgateway02_system_disk" {
+      [32m+[0m[0m attachment            = (known after apply)
+      [32m+[0m[0m availability_zone     = "ru-moscow-1b"
+      [32m+[0m[0m cascade               = false
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m device_type           = "VBD"
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m image_id              = "804761ab-346f-43cd-ac40-bee6f841be47"
+      [32m+[0m[0m multiattach           = false
+      [32m+[0m[0m name                  = "gameflexmatch-appgateway02-system-disk"
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m size                  = 100
+      [32m+[0m[0m volume_type           = "GPSSD"
+      [32m+[0m[0m wwn                   = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup.secgroup[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup" "secgroup" {
+      [32m+[0m[0m created_at            = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-sg"
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m rules                 = (known after apply)
+      [32m+[0m[0m updated_at            = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_accessing_aass[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_accessing_aass" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к компоненту AASS"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 9091
+      [32m+[0m[0m port_range_min          = 9091
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "192.168.1.0/24"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_accessing_appgateway[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_accessing_appgateway" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к компоненту Appgateway"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 60003
+      [32m+[0m[0m port_range_min          = 60003
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "192.168.1.0/24"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_accessing_console[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_accessing_console" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к платформе управления GameFlexMatch"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 80
+      [32m+[0m[0m port_range_min          = 80
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "0.0.0.0/0"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_accessing_fleetmanager[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_accessing_fleetmanager" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к компоненту Fleetmanager"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 31002
+      [32m+[0m[0m port_range_min          = 31002
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "192.168.1.0/24"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_accessing_mysql[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_accessing_mysql" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к MySQL"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 3306
+      [32m+[0m[0m port_range_min          = 3306
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "192.168.1.0/24"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_accessing_redis[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_accessing_redis" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к Redis"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 6379
+      [32m+[0m[0m port_range_min          = 6379
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "192.168.1.0/24"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_component_mutual_access[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_component_mutual_access" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить взаимный доступ между Appgateway и Auxproxy"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 60003
+      [32m+[0m[0m port_range_min          = 60003
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "0.0.0.0/0"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_elb_accessing_ecs[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_elb_accessing_ecs" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить доступ к бэкэнд-серверам через ELB"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 65535
+      [32m+[0m[0m port_range_min          = 1
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "100.125.0.0/16"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_ping[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_ping" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить ICMP ping для проверки доступности серверов"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = (known after apply)
+      [32m+[0m[0m port_range_min          = (known after apply)
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "icmp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "0.0.0.0/0"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_networking_secgroup_rule.allow_ssh_linux[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_networking_secgroup_rule" "allow_ssh_linux" {
+      [32m+[0m[0m action                  = (known after apply)
+      [32m+[0m[0m description             = "Разрешить SSH-доступ к Linux-серверам"
+      [32m+[0m[0m direction               = "ingress"
+      [32m+[0m[0m ethertype               = "IPv4"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m port_range_max          = 22
+      [32m+[0m[0m port_range_min          = 22
+      [32m+[0m[0m ports                   = (known after apply)
+      [32m+[0m[0m priority                = (known after apply)
+      [32m+[0m[0m protocol                = "tcp"
+      [32m+[0m[0m region                  = (known after apply)
+      [32m+[0m[0m remote_address_group_id = (known after apply)
+      [32m+[0m[0m remote_group_id         = (known after apply)
+      [32m+[0m[0m remote_ip_prefix        = "192.168.1.0/24"
+      [32m+[0m[0m security_group_id       = (known after apply)
+    }
+
+[1m  # sbercloud_obs_bucket.bucket[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_obs_bucket" "bucket" {
+      [32m+[0m[0m acl                   = "private"
+      [32m+[0m[0m bucket                = "gameflexmatch-storage-obs"
+      [32m+[0m[0m bucket_domain_name    = (known after apply)
+      [32m+[0m[0m bucket_version        = (known after apply)
+      [32m+[0m[0m encryption            = false
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m force_destroy         = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m kms_key_project_id    = (known after apply)
+      [32m+[0m[0m multi_az              = false
+      [32m+[0m[0m policy                = (known after apply)
+      [32m+[0m[0m policy_format         = "obs"
+      [32m+[0m[0m quota                 = 0
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m storage_class         = "STANDARD"
+      [32m+[0m[0m storage_info          = (known after apply)
+      [32m+[0m[0m versioning            = false
+    }
+
+[1m  # sbercloud_rds_instance.rds_instance[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_rds_instance" "rds_instance" {
+      [32m+[0m[0m availability_zone     = [
+          [32m+[0m[0m "ru-moscow-1a",
+        ]
+      [32m+[0m[0m charging_mode         = "postPaid"
+      [32m+[0m[0m created               = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m fixed_ip              = (known after apply)
+      [32m+[0m[0m flavor                = "rds.mysql.s1.large.ha"
+      [32m+[0m[0m ha_replication_mode   = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-hosting-platform-demo"
+      [32m+[0m[0m nodes                 = (known after apply)
+      [32m+[0m[0m period                = 1
+      [32m+[0m[0m period_unit           = "month"
+      [32m+[0m[0m private_ips           = (known after apply)
+      [32m+[0m[0m public_ips            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m security_group_id     = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+      [32m+[0m[0m subnet_id             = (known after apply)
+      [32m+[0m[0m time_zone             = (known after apply)
+      [32m+[0m[0m vpc_id                = (known after apply)
+
+      [32m+[0m[0m backup_strategy {
+          [32m+[0m[0m keep_days  = 7
+          [32m+[0m[0m start_time = "03:00-04:00"
+        }
+
+      [32m+[0m[0m db {
+          [32m+[0m[0m password  = (sensitive value)
+          [32m+[0m[0m port      = (known after apply)
+          [32m+[0m[0m type      = "MySQL"
+          [32m+[0m[0m user_name = (known after apply)
+          [32m+[0m[0m version   = "5.7"
+        }
+
+      [32m+[0m[0m parameters (known after apply)
+
+      [32m+[0m[0m volume {
+          [32m+[0m[0m disk_encryption_id = (known after apply)
+          [32m+[0m[0m size               = 100
+          [32m+[0m[0m type               = "CLOUDSSD"
+        }
+    }
+
+[1m  # sbercloud_vpc.vpc[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc" "vpc" {
+      [32m+[0m[0m cidr                  = "192.168.0.0/16"
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m name                  = "gameflexmatch-vpc"
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m routes                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+    }
+
+[1m  # sbercloud_vpc_eip.eip[0][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-1"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[1][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-2"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[2][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-3"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[3][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-4"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[4][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-5"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[5][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-6"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[6][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-7"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[7][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-8"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_eip.eip[8][0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_eip" "eip" {
+      [32m+[0m[0m address               = (known after apply)
+      [32m+[0m[0m charging_mode         = (known after apply)
+      [32m+[0m[0m enterprise_project_id = (known after apply)
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m ipv6_address          = (known after apply)
+      [32m+[0m[0m port_id               = (known after apply)
+      [32m+[0m[0m private_ip            = (known after apply)
+      [32m+[0m[0m region                = (known after apply)
+      [32m+[0m[0m status                = (known after apply)
+
+      [32m+[0m[0m bandwidth {
+          [32m+[0m[0m charge_mode = "bandwidth"
+          [32m+[0m[0m id          = (known after apply)
+          [32m+[0m[0m name        = "gameflexmatch-vpc-bandwidth-9"
+          [32m+[0m[0m share_type  = "PER"
+          [32m+[0m[0m size        = 5
+        }
+
+      [32m+[0m[0m publicip {
+          [32m+[0m[0m ip_address = (known after apply)
+          [32m+[0m[0m ip_version = (known after apply)
+          [32m+[0m[0m port_id    = (known after apply)
+          [32m+[0m[0m type       = "5_bgp"
+        }
+    }
+
+[1m  # sbercloud_vpc_subnet.subnet[0m will be created
+[0m  [32m+[0m[0m resource "sbercloud_vpc_subnet" "subnet" {
+      [32m+[0m[0m availability_zone = "ru-moscow-1a"
+      [32m+[0m[0m cidr              = "192.168.1.0/24"
+      [32m+[0m[0m dhcp_enable       = true
+      [32m+[0m[0m dns_list          = (known after apply)
+      [32m+[0m[0m gateway_ip        = "192.168.1.1"
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m ipv4_subnet_id    = (known after apply)
+      [32m+[0m[0m ipv6_cidr         = (known after apply)
+      [32m+[0m[0m ipv6_gateway      = (known after apply)
+      [32m+[0m[0m ipv6_subnet_id    = (known after apply)
+      [32m+[0m[0m name              = "gameflexmatch-vpc-subnet"
+      [32m+[0m[0m primary_dns       = (known after apply)
+      [32m+[0m[0m region            = (known after apply)
+      [32m+[0m[0m secondary_dns     = (known after apply)
+      [32m+[0m[0m subnet_id         = (known after apply)
+      [32m+[0m[0m vpc_id            = (known after apply)
+    }
+
+[1mPlan:[0m 40 to add, 0 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m GameFlexMatch_access_url = (known after apply)
