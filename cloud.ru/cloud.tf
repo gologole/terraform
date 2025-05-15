@@ -707,6 +707,120 @@ resource "sbercloud_networking_secgroup_rule" "allow_elb_accessing_ecs" {
   remote_ip_prefix  = "100.125.0.0/16"
 }
 
+# Создаём сам балансировщик нагрузки (ELB)
+resource "sbercloud_elb_loadbalancer" "fleetmanager" {
+  name           = "${var.elb_name}_fleetmanager"
+  vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
+  provider       = "vlb"          # виртуальный лоадбалансер
+}
+
+# Listener на порту 31002/TCP
+resource "sbercloud_elb_listener" "fleetmanager" {
+  loadbalancer_id = sbercloud_elb_loadbalancer.fleetmanager.id
+  protocol        = "TCP"
+  protocol_port   = 31002
+}
+
+# Pool для распределения трафика
+resource "sbercloud_elb_pool" "fleetmanager" {
+  listener_id = sbercloud_elb_listener.fleetmanager.id
+  lb_method   = "ROUND_ROBIN"
+  protocol    = "TCP"
+}
+
+# Добавляем в pool все инстансы fleetmanager
+resource "sbercloud_elb_member" "fleetmanager" {
+  count         = length(sbercloud_compute_instance.fleetmanager)
+  pool_id       = sbercloud_elb_pool.fleetmanager.id
+  address       = sbercloud_compute_instance.fleetmanager[count.index].access_ip_v4
+  protocol_port = 31002
+}
+
+# Health monitor для проверки работоспособности бэкендов
+resource "sbercloud_elb_monitor" "fleetmanager" {
+  pool_id     = sbercloud_elb_pool.fleetmanager.id
+  type        = "TCP"
+  delay       = 5
+  timeout     = 3
+  max_retries = 3
+}
+
+# Создаём сам балансировщик нагрузки (ELB)
+resource "sbercloud_elb_loadbalancer" "appgateway1" {
+  name           = "${var.elb_name}_appgateway1"
+  vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
+  provider       = "vlb"          # виртуальный лоадбалансер
+}
+
+# Listener на порту 31002/TCP
+resource "sbercloud_elb_listener" "appgateway1" {
+  loadbalancer_id = sbercloud_elb_loadbalancer.appgateway1.id
+  protocol        = "TCP"
+  protocol_port   = 60003
+}
+
+# Pool для распределения трафика
+resource "sbercloud_elb_pool" "appgateway1" {
+  listener_id = sbercloud_elb_listener.appgateway1.id
+  lb_method   = "ROUND_ROBIN"
+  protocol    = "TCP"
+}
+
+# Добавляем в pool все инстансы appgateway1
+resource "sbercloud_elb_member" "appgateway1" {
+  count         = length(sbercloud_compute_instance.appgateway1)
+  pool_id       = sbercloud_elb_pool.appgateway1.id
+  address       = sbercloud_compute_instance.appgateway1[count.index].access_ip_v4
+  protocol_port = 60003
+}
+
+# Health monitor для проверки работоспособности бэкендов
+resource "sbercloud_elb_monitor" "appgateway1" {
+  pool_id     = sbercloud_elb_pool.appgateway1.id
+  type        = "TCP"
+  delay       = 5
+  timeout     = 3
+  max_retries = 3
+}
+
+# Создаём сам балансировщик нагрузки (ELB)
+resource "sbercloud_elb_loadbalancer" "aass" {
+  name           = "${var.elb_name}_aass"
+  vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
+  provider       = "vlb"          # виртуальный лоадбалансер
+}
+
+# Listener на порту 31002/TCP
+resource "sbercloud_elb_listener" "aass" {
+  loadbalancer_id = sbercloud_elb_loadbalancer.aass.id
+  protocol        = "TCP"
+  protocol_port   = 9091
+}
+
+# Pool для распределения трафика
+resource "sbercloud_elb_pool" "aass" {
+  listener_id = sbercloud_elb_listener.aass.id
+  lb_method   = "ROUND_ROBIN"
+  protocol    = "TCP"
+}
+
+# Добавляем в pool все инстансы aass
+resource "sbercloud_elb_member" "aass" {
+  count         = length(sbercloud_compute_instance.aass)
+  pool_id       = sbercloud_elb_pool.aass.id
+  address       = sbercloud_compute_instance.aass[count.index].access_ip_v4
+  protocol_port = 9091
+}
+
+# Health monitor для проверки работоспособности бэкендов
+resource "sbercloud_elb_monitor" "aass" {
+  pool_id     = sbercloud_elb_pool.aass.id
+  type        = "TCP"
+  delay       = 5
+  timeout     = 3
+  max_retries = 3
+}
+
 # Создание системного диска для Appgateway01
 resource "sbercloud_evs_volume" "appgateway01_sysdisk" {
   name              = "${var.ecs_name}-appgateway01-sysdisk"
@@ -1006,4 +1120,53 @@ resource "sbercloud_identity_agency" "identity_agency" {
       sbercloud_identity_role.smn_role.name
     ]
   }
+}
+# Appgateway01 ← EIP[0]
+resource "sbercloud_vpc_eip_associate" "appgateway1" {
+  instance_id = sbercloud_compute_instance.appgateway1.id
+  eip_id      = sbercloud_vpc_eip.eip[0].id
+}
+
+# Appgateway02 ← EIP[1]
+resource "sbercloud_vpc_eip_associate" "appgateway2" {
+  instance_id = sbercloud_compute_instance.appgateway2.id
+  eip_id      = sbercloud_vpc_eip.eip[1].id
+}
+
+# AASS instances ← EIP[2] и EIP[3]
+resource "sbercloud_vpc_eip_associate" "aass1" {
+  instance_id = sbercloud_compute_instance.aass[0].id
+  eip_id      = sbercloud_vpc_eip.eip[2].id
+}
+
+resource "sbercloud_vpc_eip_associate" "aass2" {
+  instance_id = sbercloud_compute_instance.aass[1].id
+  eip_id      = sbercloud_vpc_eip.eip[3].id
+}
+
+# Fleetmanager instances ← EIP[4] и EIP[5]
+resource "sbercloud_vpc_eip_associate" "fleetmanager1" {
+  instance_id = sbercloud_compute_instance.fleetmanager[0].id
+  eip_id      = sbercloud_vpc_eip.eip[4].id
+}
+
+resource "sbercloud_vpc_eip_associate" "fleetmanager2" {
+  instance_id = sbercloud_compute_instance.fleetmanager[1].id
+  eip_id      = sbercloud_vpc_eip.eip[5].id
+}
+
+# InfluxDB cluster nodes ← EIP[6], EIP[7], EIP[8]
+resource "sbercloud_vpc_eip_associate" "influxdb_node1" {
+  instance_id = sbercloud_compute_instance.influxdb_nodes[0].id
+  eip_id      = sbercloud_vpc_eip.eip[6].id
+}
+
+resource "sbercloud_vpc_eip_associate" "influxdb_node2" {
+  instance_id = sbercloud_compute_instance.influxdb_nodes[1].id
+  eip_id      = sbercloud_vpc_eip.eip[7].id
+}
+
+resource "sbercloud_vpc_eip_associate" "influxdb_node3" {
+  instance_id = sbercloud_compute_instance.influxdb_nodes[2].id
+  eip_id      = sbercloud_vpc_eip.eip[8].id
 }
