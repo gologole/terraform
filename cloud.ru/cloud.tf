@@ -1,11 +1,11 @@
 terraform {
   required_providers {
     sbercloud = {
-      source  = "sbercloud-terraform/sbercloud"
+      source = "sbercloud-terraform/sbercloud"
       version = "1.10.1"
     }
     null = {
-      source  = "hashicorp/null"
+      source = "local/hashicorp/null"
       version = "3.2.1"
     }
   }
@@ -711,7 +711,7 @@ resource "sbercloud_networking_secgroup_rule" "allow_elb_accessing_ecs" {
 resource "sbercloud_elb_loadbalancer" "fleetmanager" {
   name           = "${var.elb_name}_fleetmanager"
   vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
-  provider       = "vlb"          # виртуальный лоадбалансер
+  provider       = vlb          # виртуальный лоадбалансер
 }
 
 # Listener на порту 31002/TCP
@@ -749,7 +749,7 @@ resource "sbercloud_elb_monitor" "fleetmanager" {
 resource "sbercloud_elb_loadbalancer" "appgateway1" {
   name           = "${var.elb_name}_appgateway1"
   vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
-  provider       = "vlb"          # виртуальный лоадбалансер
+  provider       = vlb          # виртуальный лоадбалансер
 }
 
 # Listener на порту 31002/TCP
@@ -787,7 +787,7 @@ resource "sbercloud_elb_monitor" "appgateway1" {
 resource "sbercloud_elb_loadbalancer" "aass" {
   name           = "${var.elb_name}_aass"
   vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
-  provider       = "vlb"          # виртуальный лоадбалансер
+  provider       = vlb          # виртуальный лоадбалансер
 }
 
 # Listener на порту 31002/TCP
