@@ -935,7 +935,7 @@ resource "sbercloud_compute_instance" "console" {
               wget -P /tmp/ https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-console.sh
               chmod +x /tmp/init-console.sh
               sh /tmp/init-console.sh \
-                ${sbercloud_compute_instance.appgateway1.access_ip_v4} \
+                ${sbercloud_compute_instance.appgateway1[0].access_ip_v4} \
                 ${var.ecs_password} \
                 ${sbercloud_lb_loadbalancer.fleetmanager.vip_address} \
                 > /tmp/init-console.log 2>&1
