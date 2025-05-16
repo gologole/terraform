@@ -846,7 +846,6 @@ resource "sbercloud_compute_instance" "aass" {
     uuid = sbercloud_vpc_subnet.subnet.id
   }
 
-  user_data = file("${path.module}/user_data/aass0${count.index + 1}.sh")
 
   charging_mode = var.charge_mode
   period_unit   = var.charge_period_unit
@@ -935,7 +934,11 @@ resource "sbercloud_compute_instance" "console" {
               echo 'root:${var.ecs_password}' | chpasswd
               wget -P /tmp/ https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-console.sh
               chmod +x /tmp/init-console.sh
-              sh /tmp/init-console.sh ${sbercloud_compute_instance.appgateway1[0].access_ip_v4} ${var.ecs_password} ${sbercloud_lb_loadbalancer.fleetmanager.vip_address} > /tmp/init-console.log 2>&1
+              sh /tmp/init-console.sh \
+                ${sbercloud_compute_instance.appgateway1.access_ip_v4} \
+                ${var.ecs_password} \
+                ${sbercloud_lb_loadbalancer.fleetmanager.vip_address} \
+                > /tmp/init-console.log 2>&1
               rm -rf /tmp/init-console.sh
               EOF
 
@@ -1076,4 +1079,37 @@ resource "sbercloud_compute_instance" "appgateway1" {
     security   = "enabled"
     service    = "appgateway"
   }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              echo 'root:${var.ecs_password}' | chpasswd
+              wget -P /tmp/ https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-backend.sh
+              chmod +x /tmp/init-backend.sh
+              sh /tmp/init-backend.sh \
+                ${sbercloud_compute_instance.appgateway2.access_ip_v4} \
+                ${sbercloud_compute_instance.aass[0].access_ip_v4} \
+                ${sbercloud_compute_instance.aass[1].access_ip_v4} \
+                ${sbercloud_compute_instance.fleetmanager[0].access_ip_v4} \
+                ${sbercloud_compute_instance.fleetmanager[1].access_ip_v4} \
+                ${var.ecs_password} \
+                ${sbercloud_lb_loadbalancer.aass.vip_address} \
+                ${sbercloud_rds_instance.rds_instance.fixed_ip} \
+                ${var.rds_password} \
+                ${sbercloud_compute_instance.influxdb_nodes[0].access_ip_v4} \
+                ${var.influxdb_password} \
+                ${sbercloud_dcs_instance.redis_instance.ip} \
+                ${var.redis_password} \
+                ${sbercloud_lb_loadbalancer.appgateway.vip_address} \
+                ${var.enterprise_project_id} \
+                ${var.domain_id} \
+                ${var.access_key} \
+                ${var.secret_access_key} \
+                ${sbercloud_obs_bucket.bucket.bucket} \
+                ${sbercloud_vpc_eip.eip[0].address} \
+                ${sbercloud_vpc_eip.eip[1].address} \
+                ${sbercloud_vpc_eip.eip[2].address} \
+                ${sbercloud_vpc_eip.eip[3].address} \
+                > /tmp/init_backend.log 2>&1
+              rm -rf /tmp/init-backend.sh
+              EOF
 }
