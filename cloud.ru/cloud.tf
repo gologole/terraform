@@ -1092,14 +1092,14 @@ resource "sbercloud_compute_instance" "appgateway1" {
                 ${sbercloud_compute_instance.fleetmanager[0].access_ip_v4} \
                 ${sbercloud_compute_instance.fleetmanager[1].access_ip_v4} \
                 ${var.ecs_password} \
-                ${sbercloud_lb_loadbalancer.aass.vip_address} \
+                ${sbercloud_lb_loadbalancer.fleetmanager.vip_address} \
                 ${sbercloud_rds_instance.rds_instance.fixed_ip} \
                 ${var.rds_password} \
                 ${sbercloud_compute_instance.influxdb_nodes[0].access_ip_v4} \
                 ${var.influxdb_password} \
-                ${sbercloud_dcs_instance.redis_instance.ip} \
+                ${sbercloud_dcs_instance.redis_instance.private_ip} \
                 ${var.redis_password} \
-                ${sbercloud_lb_loadbalancer.appgateway.vip_address} \
+                ${sbercloud_lb_loadbalancer.appgateway1.vip_address} \
                 ${var.enterprise_project_id} \
                 ${var.domain_id} \
                 ${var.access_key} \
