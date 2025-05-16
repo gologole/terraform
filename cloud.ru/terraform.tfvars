@@ -13,13 +13,13 @@ obs_bucket_name     = "gameflexmatch-storage"
 ecs_password    = "GameFlexMatch2024!"
 rds_password    = "GameFlexMatch2024!"
 redis_password  = "GameFlexMatch2024!"
-influx_password = "GameFlexMatch2024!"
+influx_password = "Aa1!securepass"
 
 influxdb_cluster_name = "your-cluster-name"
 influxdb_password     = "your-secure-password"
 
 ecs_flavor     = "s6.large.2"
-rds_flavor = "rds.mysql.s1.large.ha"
+rds_flavor = "rds.mysql.n1.large.2.ha"
 redis_capacity = 2
 
 eip_bandwidth_size = 5

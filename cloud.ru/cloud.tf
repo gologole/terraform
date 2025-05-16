@@ -38,7 +38,7 @@ variable "enterprise_project_id" {
 
 variable "vpc_name" {
   type        = string
-  default     = "gameflexmatch-hosting-platform-demo"
+  default     = "gameflexmatch-hosting-platform-demo-20240611-1530"
   description = "Имя виртуальной частной сети (VPC). Шаблон создаёт новый VPC, дублирование имён не допускается. Допустимая длина: 1–54 символа, поддерживаются цифры, буквы, китайские символы, подчёркивание (_), дефис (-) и точка (.). По умолчанию gameflexmatch-hosting-platform-demo."
   nullable    = false
 }
@@ -122,7 +122,7 @@ variable "secret_access_key" {
 
 variable "iam_agency_name" {
   type        = string
-  default     = ""
+  default     = "gameflexmatch-agency-20240611-1530"
   description = "Имя доверенного агентства IAM; дублирование не допускается. Для установки ICAgent и экспорта логов в LTS. Длина: 1–59 символов; поддерживаются буквы, цифры, пробелы и спецсимволы - _ . ,."
   nullable    = false
 
@@ -333,11 +333,11 @@ variable "rds_name" {
 
 variable "rds_flavor" {
   type        = string
-  default     = "rds.mysql.s1.large.ha"
-  description = "Спецификация RDS"
+  default     = "rds.mysql.n1.large.2.ha"
+  description = "Название flavor для RDS в SberCloud. См. список доступных flavor-ов через data.sbercloud_rds_flavors.rds_flavors."
   validation {
-    condition     = can(regex("^rds\\.mysql\\.[sn][1-9]\\.(large|xlarge)(\\.ha)?$", var.rds_flavor))
-    error_message = "rds_flavor должен соответствовать шаблону типа rds.mysql.s1.large.ha"
+    condition     = can(regex("^rds\\.mysql\\.[a-z0-9]+\\.[a-z0-9.]+(\\.ha)?$", var.rds_flavor))
+    error_message = "rds_flavor должен быть валидным именем flavor из списка data.sbercloud_rds_flavors.rds_flavors.flavors."
   }
 }
 
@@ -479,7 +479,7 @@ data "sbercloud_rds_flavors" "rds_flavors" {
 
 # Создание VPC
 resource "sbercloud_vpc" "vpc" {
-  name = var.vpc_name
+  name = "gameflexmatch-vpc-rnd4a2d"
   cidr = "192.168.0.0/16"
 }
 
@@ -570,9 +570,11 @@ resource "sbercloud_dcs_instance" "redis_instance" {
   availability_zones = [data.sbercloud_availability_zones.az.names[0]]
   vpc_id             = sbercloud_vpc.vpc.id
   subnet_id          = sbercloud_vpc_subnet.subnet.id
-  security_group_id  = sbercloud_networking_secgroup.secgroup.id
   password           = var.redis_password
-  whitelist_enable   = false
+  whitelists {
+    group_name   = "default"
+    ip_address = [sbercloud_vpc_subnet.subnet.cidr]
+  }
 
   backup_policy {
     backup_type = "auto"
@@ -783,7 +785,7 @@ resource "sbercloud_evs_volume" "appgateway02_system_disk" {
   name              = "${var.ecs_name}-appgateway02-system-disk"
   availability_zone = data.sbercloud_availability_zones.az.names[1]
   size              = var.ecs_disk_size
-  volume_type       = "GPSSD"
+  volume_type       = "SSD"
   image_id          = data.sbercloud_images_image.centos.id
 }
 
@@ -815,18 +817,13 @@ resource "sbercloud_compute_volume_attach" "appgateway02_sysdisk_attach" {
   volume_id   = sbercloud_evs_volume.appgateway02_system_disk.id
 }
 
-resource "sbercloud_compute_eip_associate" "appgateway2" {
-  public_ip   = sbercloud_vpc_eip.eip[1].address
-  instance_id = sbercloud_compute_instance.appgateway2.id
-}
-
 # AASS Instances
 resource "sbercloud_evs_volume" "aass_system_disks" {
   count             = 2
   name              = "${var.ecs_name}-aass0${count.index + 1}-system-disk"
   availability_zone = data.sbercloud_availability_zones.az.names[count.index % 2]
   size              = var.ecs_disk_size
-  volume_type       = "GPSSD"
+  volume_type       = "SSD"
   image_id          = data.sbercloud_images_image.centos.id
 }
 
@@ -839,7 +836,7 @@ resource "sbercloud_compute_instance" "aass" {
   security_groups   = [sbercloud_networking_secgroup.secgroup.id]
   key_pair          = var.keypair_name
   
-  system_disk_type  = "GPSSD"
+  system_disk_type  = "SSD"
   system_disk_size  = var.ecs_disk_size
 
   network {
@@ -856,16 +853,6 @@ resource "sbercloud_compute_instance" "aass" {
     security   = "enabled"
     service    = "aass"
   }
-}
-
-resource "sbercloud_compute_eip_associate" "aass1" {
-  public_ip   = sbercloud_vpc_eip.eip[2].address
-  instance_id = sbercloud_compute_instance.aass[0].id
-}
-
-resource "sbercloud_compute_eip_associate" "aass2" {
-  public_ip   = sbercloud_vpc_eip.eip[3].address
-  instance_id = sbercloud_compute_instance.aass[1].id
 }
 
 # Определение инстансов fleetmanager
@@ -891,16 +878,6 @@ resource "sbercloud_compute_instance" "fleetmanager" {
     security   = "enabled"
     service    = "fleetmanager"
   }
-}
-
-resource "sbercloud_compute_eip_associate" "fleetmanager1" {
-  public_ip   = sbercloud_vpc_eip.eip[4].address
-  instance_id = sbercloud_compute_instance.fleetmanager[0].id
-}
-
-resource "sbercloud_compute_eip_associate" "fleetmanager2" {
-  public_ip   = sbercloud_vpc_eip.eip[5].address
-  instance_id = sbercloud_compute_instance.fleetmanager[1].id
 }
 
 # Console instance
@@ -947,14 +924,9 @@ resource "sbercloud_compute_instance" "console" {
   }
 }
 
-resource "sbercloud_compute_eip_associate" "console_eip" {
-  public_ip   = sbercloud_vpc_eip.eip[6].address
-  instance_id = sbercloud_compute_instance.console.id
-}
-
 output "GameFlexMatch_access_url" {
   description = "URL доступа к платформе GameFlexMatch"
-  value       = "Из-за колебаний сети после успешного создания ресурсов подождите примерно 20 минут, затем в браузере введите http://${sbercloud_vpc_eip.eip[6].address} для доступа к платформе GameFlexMatch. Учётная запись администратора по умолчанию — admin, начальный пароль — пароль эластичной виртуальной машины; при первом входе система потребует сбросить пароль."
+  value       = "После успешного создания ресурсов используйте один из выделенных EIP: http://${sbercloud_vpc_eip.eip[0].address} или http://${sbercloud_vpc_eip.eip[1].address} для доступа к платформе GameFlexMatch. Учётная запись администратора по умолчанию — admin, начальный пароль — пароль эластичной виртуальной машины; при первом входе система потребует сбросить пароль."
 }
 
 resource "sbercloud_compute_instance" "influxdb_nodes" {
@@ -992,32 +964,17 @@ resource "sbercloud_compute_instance" "influxdb_nodes" {
               EOF
 }
 
-resource "sbercloud_compute_eip_associate" "influxdb_node1" {
-  public_ip   = sbercloud_vpc_eip.eip[6].address
-  instance_id = sbercloud_compute_instance.influxdb_nodes[0].id
-}
-
-resource "sbercloud_compute_eip_associate" "influxdb_node2" {
-  public_ip   = sbercloud_vpc_eip.eip[7].address
-  instance_id = sbercloud_compute_instance.influxdb_nodes[1].id
-}
-
-resource "sbercloud_compute_eip_associate" "influxdb_node3" {
-  public_ip   = sbercloud_vpc_eip.eip[8].address
-  instance_id = sbercloud_compute_instance.influxdb_nodes[2].id
-}
-
 # Выделенные публичные IP для VPC
 resource "sbercloud_vpc_eip" "eip" {
-  count = 9  # Судя по использованию eip[6] в выводе, нужно минимум 7 EIP
+  count = 2
+  bandwidth {
+    charge_mode = "bandwidth"
+    name        = "gameflexmatch-vpc-bandwidth-${count.index + 1}"
+    share_type  = "PER"
+    size        = 5
+  }
   publicip {
     type = "5_bgp"
-  }
-  bandwidth {
-    name        = "${var.vpc_name}-bandwidth-${count.index + 1}"
-    share_type  = "PER"
-    size        = var.eip_bandwidth_size
-    charge_mode = "bandwidth"
   }
 }
 
@@ -1045,17 +1002,16 @@ resource "sbercloud_identity_role" "smn_role" {
 
 # Identity Agency
 resource "sbercloud_identity_agency" "identity_agency" {
-  name                   = var.iam_agency_name
+  name                   = "${var.iam_agency_name}-rnd${random_id.suffix.hex}"
   delegated_service_name = "op_svc_ecs"
 
   project_role {
     project = "ru-moscow-1"
-    roles = [
-      "LTS Administrator",
+    roles   = [
       "APM Administrator",
-      "Tenant Guest",
       "Tenant Administrator",
-      sbercloud_identity_role.smn_role.name
+      "Tenant Guest",
+      "gameflexmatch-agency_role"
     ]
   }
 }
@@ -1107,9 +1063,11 @@ resource "sbercloud_compute_instance" "appgateway1" {
                 ${sbercloud_obs_bucket.bucket.bucket} \
                 ${sbercloud_vpc_eip.eip[0].address} \
                 ${sbercloud_vpc_eip.eip[1].address} \
-                ${sbercloud_vpc_eip.eip[2].address} \
-                ${sbercloud_vpc_eip.eip[3].address} \
                 > /tmp/init_backend.log 2>&1
               rm -rf /tmp/init-backend.sh
               EOF
+}
+
+resource "random_id" "suffix" {
+  byte_length = 2
 }
