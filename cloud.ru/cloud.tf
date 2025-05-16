@@ -5,8 +5,12 @@ terraform {
       version = "1.10.1"
     }
     null = {
-      source = "local/hashicorp/null"
+      source = "hashicorp/null"
       version = "3.2.1"
+    }
+    local = {
+      source  = "hashicorp/local"
+      version = "2.4.0"
     }
   }
 }
@@ -708,37 +712,37 @@ resource "sbercloud_networking_secgroup_rule" "allow_elb_accessing_ecs" {
 }
 
 # Создаём сам балансировщик нагрузки (ELB)
-resource "sbercloud_elb_loadbalancer" "fleetmanager" {
+resource "sbercloud_lb_loadbalancer" "fleetmanager" {
   name           = "${var.elb_name}_fleetmanager"
   vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
-  provider       = vlb          # виртуальный лоадбалансер
 }
 
 # Listener на порту 31002/TCP
-resource "sbercloud_elb_listener" "fleetmanager" {
-  loadbalancer_id = sbercloud_elb_loadbalancer.fleetmanager.id
+resource "sbercloud_lb_listener" "fleetmanager" {
+  loadbalancer_id = sbercloud_lb_loadbalancer.fleetmanager.id
   protocol        = "TCP"
   protocol_port   = 31002
 }
 
 # Pool для распределения трафика
-resource "sbercloud_elb_pool" "fleetmanager" {
-  listener_id = sbercloud_elb_listener.fleetmanager.id
+resource "sbercloud_lb_pool" "fleetmanager" {
+  listener_id = sbercloud_lb_listener.fleetmanager.id
   lb_method   = "ROUND_ROBIN"
   protocol    = "TCP"
 }
 
 # Добавляем в pool все инстансы fleetmanager
-resource "sbercloud_elb_member" "fleetmanager" {
+resource "sbercloud_lb_member" "fleetmanager" {
   count         = length(sbercloud_compute_instance.fleetmanager)
-  pool_id       = sbercloud_elb_pool.fleetmanager.id
+  pool_id       = sbercloud_lb_pool.fleetmanager.id
   address       = sbercloud_compute_instance.fleetmanager[count.index].access_ip_v4
   protocol_port = 31002
+  subnet_id     = sbercloud_vpc_subnet.subnet.id
 }
 
 # Health monitor для проверки работоспособности бэкендов
-resource "sbercloud_elb_monitor" "fleetmanager" {
-  pool_id     = sbercloud_elb_pool.fleetmanager.id
+resource "sbercloud_lb_monitor" "fleetmanager" {
+  pool_id     = sbercloud_lb_pool.fleetmanager.id
   type        = "TCP"
   delay       = 5
   timeout     = 3
@@ -746,117 +750,32 @@ resource "sbercloud_elb_monitor" "fleetmanager" {
 }
 
 # Создаём сам балансировщик нагрузки (ELB)
-resource "sbercloud_elb_loadbalancer" "appgateway1" {
+resource "sbercloud_lb_loadbalancer" "appgateway1" {
   name           = "${var.elb_name}_appgateway1"
   vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
-  provider       = vlb          # виртуальный лоадбалансер
 }
 
 # Listener на порту 31002/TCP
-resource "sbercloud_elb_listener" "appgateway1" {
-  loadbalancer_id = sbercloud_elb_loadbalancer.appgateway1.id
+resource "sbercloud_lb_listener" "appgateway1" {
+  loadbalancer_id = sbercloud_lb_loadbalancer.appgateway1.id
   protocol        = "TCP"
   protocol_port   = 60003
 }
 
 # Pool для распределения трафика
-resource "sbercloud_elb_pool" "appgateway1" {
-  listener_id = sbercloud_elb_listener.appgateway1.id
+resource "sbercloud_lb_pool" "appgateway1" {
+  listener_id = sbercloud_lb_listener.appgateway1.id
   lb_method   = "ROUND_ROBIN"
   protocol    = "TCP"
 }
 
 # Добавляем в pool все инстансы appgateway1
-resource "sbercloud_elb_member" "appgateway1" {
-  count         = length(sbercloud_compute_instance.appgateway1)
-  pool_id       = sbercloud_elb_pool.appgateway1.id
+resource "sbercloud_lb_member" "appgateway1" {
+  count         = 2
+  pool_id       = sbercloud_lb_pool.appgateway1.id
   address       = sbercloud_compute_instance.appgateway1[count.index].access_ip_v4
   protocol_port = 60003
-}
-
-# Health monitor для проверки работоспособности бэкендов
-resource "sbercloud_elb_monitor" "appgateway1" {
-  pool_id     = sbercloud_elb_pool.appgateway1.id
-  type        = "TCP"
-  delay       = 5
-  timeout     = 3
-  max_retries = 3
-}
-
-# Создаём сам балансировщик нагрузки (ELB)
-resource "sbercloud_elb_loadbalancer" "aass" {
-  name           = "${var.elb_name}_aass"
-  vip_subnet_id  = sbercloud_vpc_subnet.subnet.id
-  provider       = vlb          # виртуальный лоадбалансер
-}
-
-# Listener на порту 31002/TCP
-resource "sbercloud_elb_listener" "aass" {
-  loadbalancer_id = sbercloud_elb_loadbalancer.aass.id
-  protocol        = "TCP"
-  protocol_port   = 9091
-}
-
-# Pool для распределения трафика
-resource "sbercloud_elb_pool" "aass" {
-  listener_id = sbercloud_elb_listener.aass.id
-  lb_method   = "ROUND_ROBIN"
-  protocol    = "TCP"
-}
-
-# Добавляем в pool все инстансы aass
-resource "sbercloud_elb_member" "aass" {
-  count         = length(sbercloud_compute_instance.aass)
-  pool_id       = sbercloud_elb_pool.aass.id
-  address       = sbercloud_compute_instance.aass[count.index].access_ip_v4
-  protocol_port = 9091
-}
-
-# Health monitor для проверки работоспособности бэкендов
-resource "sbercloud_elb_monitor" "aass" {
-  pool_id     = sbercloud_elb_pool.aass.id
-  type        = "TCP"
-  delay       = 5
-  timeout     = 3
-  max_retries = 3
-}
-
-# Создание системного диска для Appgateway01
-resource "sbercloud_evs_volume" "appgateway01_sysdisk" {
-  name              = "${var.ecs_name}-appgateway01-sysdisk"
-  description       = "Системный диск для Appgateway01"
-  size              = var.ecs_disk_size
-  volume_type       = "SSD" # Убедитесь, что тип диска поддерживается в вашем регионе
-  availability_zone = data.sbercloud_availability_zones.az.names[0]
-}
-
-# Создание виртуальной машины Appgateway01
-resource "sbercloud_compute_instance" "appgateway1" {
-  name              = "${var.ecs_name}-appgateway01"
-  flavor_id         = var.ecs_flavor
-  image_id          = data.sbercloud_images_image.centos.id
-  availability_zone = data.sbercloud_availability_zones.az.names[0]
-  admin_pass        = var.ecs_password
-  security_group_ids = [sbercloud_networking_secgroup.secgroup.id]
-  
-  charging_mode     = var.charge_mode
-  period_unit       = var.charge_period_unit
-  period            = var.charge_period
-
-  network {
-    uuid = sbercloud_vpc_subnet.subnet.id
-  }
-
-  tags = {
-    monitoring = "enabled"
-    security   = "enabled"
-    service    = "appgateway"
-  }
-}
-
-resource "sbercloud_compute_eip_associate" "appgateway1_eip" {
-  public_ip   = sbercloud_vpc_eip.eip[0].address
-  instance_id = sbercloud_compute_instance.appgateway1.id
+  subnet_id     = sbercloud_vpc_subnet.subnet.id
 }
 
 # Appgateway02
@@ -896,7 +815,7 @@ resource "sbercloud_compute_volume_attach" "appgateway02_sysdisk_attach" {
   volume_id   = sbercloud_evs_volume.appgateway02_system_disk.id
 }
 
-resource "sbercloud_compute_eip_associate" "appgateway2_eip" {
+resource "sbercloud_compute_eip_associate" "appgateway2" {
   public_ip   = sbercloud_vpc_eip.eip[1].address
   instance_id = sbercloud_compute_instance.appgateway2.id
 }
@@ -940,10 +859,14 @@ resource "sbercloud_compute_instance" "aass" {
   }
 }
 
-resource "sbercloud_compute_eip_associate" "aass_eip" {
-  count       = 2
-  public_ip   = sbercloud_vpc_eip.eip[count.index + 2].address
-  instance_id = sbercloud_compute_instance.aass[count.index].id
+resource "sbercloud_compute_eip_associate" "aass1" {
+  public_ip   = sbercloud_vpc_eip.eip[2].address
+  instance_id = sbercloud_compute_instance.aass[0].id
+}
+
+resource "sbercloud_compute_eip_associate" "aass2" {
+  public_ip   = sbercloud_vpc_eip.eip[3].address
+  instance_id = sbercloud_compute_instance.aass[1].id
 }
 
 # Определение инстансов fleetmanager
@@ -971,10 +894,14 @@ resource "sbercloud_compute_instance" "fleetmanager" {
   }
 }
 
-resource "sbercloud_compute_eip_associate" "fleetmanager_eip" {
-  count       = 2
-  public_ip   = sbercloud_vpc_eip.eip[count.index + 4].address
-  instance_id = sbercloud_compute_instance.fleetmanager[count.index].id
+resource "sbercloud_compute_eip_associate" "fleetmanager1" {
+  public_ip   = sbercloud_vpc_eip.eip[4].address
+  instance_id = sbercloud_compute_instance.fleetmanager[0].id
+}
+
+resource "sbercloud_compute_eip_associate" "fleetmanager2" {
+  public_ip   = sbercloud_vpc_eip.eip[5].address
+  instance_id = sbercloud_compute_instance.fleetmanager[1].id
 }
 
 # Console instance
@@ -1008,16 +935,15 @@ resource "sbercloud_compute_instance" "console" {
               echo 'root:${var.ecs_password}' | chpasswd
               wget -P /tmp/ https://documentation-samples.obs.cn-north-4.myhuaweicloud.com/solution-as-code-publicbucket/solution-as-code-moudle/game-hosting-platform-based-on-gameflexmatch/userdata/init-console.sh
               chmod +x /tmp/init-console.sh
-              sh /tmp/init-console.sh ${sbercloud_compute_instance.appgateway1.access_ip_v4} ${var.ecs_password} ${sbercloud_lb_loadbalancer.elb_fleetmanager.vip_address} > /tmp/init-console.log 2>&1
+              sh /tmp/init-console.sh ${sbercloud_compute_instance.appgateway1[0].access_ip_v4} ${var.ecs_password} ${sbercloud_lb_loadbalancer.fleetmanager.vip_address} > /tmp/init-console.log 2>&1
               rm -rf /tmp/init-console.sh
               EOF
 
-  scheduler_hints = {
+  scheduler_hints {
     group = sbercloud_compute_servergroup.servergroup.id
   }
 }
 
-# Привязка EIP к console
 resource "sbercloud_compute_eip_associate" "console_eip" {
   public_ip   = sbercloud_vpc_eip.eip[6].address
   instance_id = sbercloud_compute_instance.console.id
@@ -1063,10 +989,19 @@ resource "sbercloud_compute_instance" "influxdb_nodes" {
               EOF
 }
 
-resource "sbercloud_compute_eip_associate" "influxdb_eip" {
-  count       = 3
-  public_ip   = sbercloud_vpc_eip.eip[count.index + 6].address
-  instance_id = sbercloud_compute_instance.influxdb_nodes[count.index].id
+resource "sbercloud_compute_eip_associate" "influxdb_node1" {
+  public_ip   = sbercloud_vpc_eip.eip[6].address
+  instance_id = sbercloud_compute_instance.influxdb_nodes[0].id
+}
+
+resource "sbercloud_compute_eip_associate" "influxdb_node2" {
+  public_ip   = sbercloud_vpc_eip.eip[7].address
+  instance_id = sbercloud_compute_instance.influxdb_nodes[1].id
+}
+
+resource "sbercloud_compute_eip_associate" "influxdb_node3" {
+  public_ip   = sbercloud_vpc_eip.eip[8].address
+  instance_id = sbercloud_compute_instance.influxdb_nodes[2].id
 }
 
 # Выделенные публичные IP для VPC
@@ -1121,52 +1056,24 @@ resource "sbercloud_identity_agency" "identity_agency" {
     ]
   }
 }
-# Appgateway01 ← EIP[0]
-resource "sbercloud_vpc_eip_associate" "appgateway1" {
-  instance_id = sbercloud_compute_instance.appgateway1.id
-  eip_id      = sbercloud_vpc_eip.eip[0].id
-}
 
-# Appgateway02 ← EIP[1]
-resource "sbercloud_vpc_eip_associate" "appgateway2" {
-  instance_id = sbercloud_compute_instance.appgateway2.id
-  eip_id      = sbercloud_vpc_eip.eip[1].id
-}
-
-# AASS instances ← EIP[2] и EIP[3]
-resource "sbercloud_vpc_eip_associate" "aass1" {
-  instance_id = sbercloud_compute_instance.aass[0].id
-  eip_id      = sbercloud_vpc_eip.eip[2].id
-}
-
-resource "sbercloud_vpc_eip_associate" "aass2" {
-  instance_id = sbercloud_compute_instance.aass[1].id
-  eip_id      = sbercloud_vpc_eip.eip[3].id
-}
-
-# Fleetmanager instances ← EIP[4] и EIP[5]
-resource "sbercloud_vpc_eip_associate" "fleetmanager1" {
-  instance_id = sbercloud_compute_instance.fleetmanager[0].id
-  eip_id      = sbercloud_vpc_eip.eip[4].id
-}
-
-resource "sbercloud_vpc_eip_associate" "fleetmanager2" {
-  instance_id = sbercloud_compute_instance.fleetmanager[1].id
-  eip_id      = sbercloud_vpc_eip.eip[5].id
-}
-
-# InfluxDB cluster nodes ← EIP[6], EIP[7], EIP[8]
-resource "sbercloud_vpc_eip_associate" "influxdb_node1" {
-  instance_id = sbercloud_compute_instance.influxdb_nodes[0].id
-  eip_id      = sbercloud_vpc_eip.eip[6].id
-}
-
-resource "sbercloud_vpc_eip_associate" "influxdb_node2" {
-  instance_id = sbercloud_compute_instance.influxdb_nodes[1].id
-  eip_id      = sbercloud_vpc_eip.eip[7].id
-}
-
-resource "sbercloud_vpc_eip_associate" "influxdb_node3" {
-  instance_id = sbercloud_compute_instance.influxdb_nodes[2].id
-  eip_id      = sbercloud_vpc_eip.eip[8].id
+resource "sbercloud_compute_instance" "appgateway1" {
+  count             = 2
+  name              = "${var.ecs_name}-appgateway0${count.index + 1}"
+  flavor_id         = var.ecs_flavor
+  image_id          = data.sbercloud_images_image.centos.id
+  availability_zone = data.sbercloud_availability_zones.az.names[count.index % 2]
+  admin_pass        = var.ecs_password
+  security_group_ids = [sbercloud_networking_secgroup.secgroup.id]
+  charging_mode     = var.charge_mode
+  period_unit       = var.charge_period_unit
+  period            = var.charge_period
+  network {
+    uuid = sbercloud_vpc_subnet.subnet.id
+  }
+  tags = {
+    monitoring = "enabled"
+    security   = "enabled"
+    service    = "appgateway"
+  }
 }
